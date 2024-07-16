@@ -1,7 +1,16 @@
-import { Link } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
+import useAxiosSecure from "../hooks/axiosSecure";
+import toast from "react-hot-toast";
+import useContextProvider from "../hooks/useContextProvider";
 
 const Register = () => {
-  const handleSubmit = (e) => {
+  const axiosSecure = useAxiosSecure();
+  const location = useLocation();
+  const navigate = useNavigate();
+  const { user } = useContextProvider();
+  console.log(user);
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
     console.log(e.target.name.value);
     const form = e.target;
@@ -9,9 +18,23 @@ const Register = () => {
     const email = form.email.value;
     const number = form.number.value;
     const pin = form.pin.value;
+    const userData = { name, email, number, pin };
+    console.log(userData);
 
-    console.log(name, email, number, pin);
+    try {
+      const res = await axiosSecure.post("/register", userData);
+      console.log(res.data);
+      toast.success(" Successfully Registered!");
+      localStorage.setItem("user", email);
+      navigate(location?.state || "/", { replace: true });
+    } catch (error) {
+      console.log(error);
+    }
   };
+
+  if (user) {
+    return navigate("/");
+  }
 
   return (
     <section className="bg-gray-50">
@@ -43,7 +66,7 @@ const Register = () => {
                   htmlFor="name"
                   className="block mb-2 text-sm font-medium text-gray-900"
                 >
-                  Your email
+                  Your Name
                 </label>
                 <input
                   type="text"
@@ -98,6 +121,7 @@ const Register = () => {
                   name="pin"
                   id="pin"
                   placeholder="•••••"
+                  maxLength={5}
                   className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5"
                   required=""
                 />
