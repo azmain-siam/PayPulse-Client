@@ -2,6 +2,7 @@ import { Link, useLocation, useNavigate } from "react-router-dom";
 import useAxiosSecure from "../hooks/axiosSecure";
 import toast from "react-hot-toast";
 import useContextProvider from "../hooks/useContextProvider";
+import { useEffect } from "react";
 
 const Register = () => {
   const axiosSecure = useAxiosSecure();
@@ -31,10 +32,12 @@ const Register = () => {
       console.log(error);
     }
   };
-
-  if (user) {
-    return navigate("/");
-  }
+  
+  useEffect(() => {
+    if (user) {
+      navigate("/");
+    }
+  }, [navigate, user]);
 
   return (
     <section className="bg-gray-50">
