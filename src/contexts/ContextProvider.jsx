@@ -20,7 +20,6 @@ const ContextProvider = ({ children }) => {
     if (user) {
       axiosSecure.post("/jwt", user).then((res) => {
         if (res.data.token) {
-          console.log(res.data.token);
           localStorage.setItem("token", res.data.token);
         }
       });

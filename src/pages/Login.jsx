@@ -1,28 +1,29 @@
 import toast from "react-hot-toast";
-import { Navigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import useAxiosSecure from "../hooks/axiosSecure";
 
 const Login = () => {
   const axiosSecure = useAxiosSecure();
+  const location = useLocation();
+  const navigate = useNavigate();
 
   const handleLogin = async (e) => {
     e.preventDefault();
     console.log(e.target.name.value);
     const form = e.target;
-    const email = form.email.value;
-    const number = form.number.value;
+    const identifier = form.identifier.value;
     const pin = form.pin.value;
-    const userData = { name, email, number, pin };
+    const userData = { identifier, pin };
     console.log(userData);
 
     try {
-      const res = await axiosSecure.post("/register", userData);
+      const res = await axiosSecure.post("/login", userData);
       console.log(res.data);
-      toast.success(" Successfully Registered!");
-      localStorage.setItem("user", email);
-      Navigate(location?.state || "/", { replace: true });
+      toast.success("Successfully Logged in!");
+      localStorage.setItem("user", identifier);
+      navigate(location?.state || "/", { replace: true });
     } catch (error) {
-      console.log(error);
+      toast.error(error.message);
     }
   };
 
@@ -59,9 +60,8 @@ const Login = () => {
                     Email or Phone
                   </label>
                   <input
-                    type="email"
-                    name="email"
-                    id="email"
+                    type="text"
+                    name="identifier"
                     className="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                     placeholder="Email or phone"
                     required=""
