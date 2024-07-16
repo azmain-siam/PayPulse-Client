@@ -1,11 +1,13 @@
 import toast from "react-hot-toast";
 import { useLocation, useNavigate } from "react-router-dom";
 import useAxiosSecure from "../hooks/axiosSecure";
+import { useState } from "react";
 
 const Login = () => {
   const axiosSecure = useAxiosSecure();
   const location = useLocation();
   const navigate = useNavigate();
+  const [error, setError] = useState("");
 
   const handleLogin = async (e) => {
     e.preventDefault();
@@ -19,11 +21,14 @@ const Login = () => {
     try {
       const res = await axiosSecure.post("/login", userData);
       console.log(res.data);
-      toast.success("Successfully Logged in!");
+      localStorage.setItem("token", res.data.token);
       localStorage.setItem("user", identifier);
+      toast.success("Successfully Logged in!");
       navigate(location?.state || "/", { replace: true });
     } catch (error) {
-      toast.error(error.message);
+      if (error.message === "Request failed with status code 400") {
+        setError("Invalid Credential. Please check and try again!");
+      }
     }
   };
 
@@ -83,8 +88,8 @@ const Login = () => {
                     className="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                     required=""
                   />
+                  {error && <p className="text-red-600 text-sm mt-2">{error}</p>}
                 </div>
-
                 <button
                   type="submit"
                   className="w-full text-white bg-blue-600 hover:bg-blue-700 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center"
