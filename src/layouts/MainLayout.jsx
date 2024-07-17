@@ -5,7 +5,7 @@ const MainLayout = () => {
   return (
     <div className="font-poppins">
       <Sidebar />
-      <div className="ml-[260px]">
+      <div className="ml-[254px]">
         <Outlet />
       </div>
     </div>

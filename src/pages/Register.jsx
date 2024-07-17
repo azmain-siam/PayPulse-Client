@@ -2,10 +2,11 @@ import { Link, useLocation, useNavigate } from "react-router-dom";
 import useAxiosSecure from "../hooks/axiosSecure";
 import toast from "react-hot-toast";
 import useContextProvider from "../hooks/useContextProvider";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 
 const Register = () => {
   const axiosSecure = useAxiosSecure();
+  const [error, setError] = useState("");
   const location = useLocation();
   const navigate = useNavigate();
   const { user } = useContextProvider();
@@ -19,6 +20,12 @@ const Register = () => {
     const email = form.email.value;
     const number = form.number.value;
     const pin = form.pin.value;
+    if (!/^\d{0,5}$/.test(pin)) {
+      setError("PIN must be a 5-digit number");
+      return;
+    } else {
+      setError("");
+    }
     const userData = { name, email, number, pin };
     console.log(userData);
 
@@ -32,7 +39,7 @@ const Register = () => {
       console.log(error);
     }
   };
-  
+
   useEffect(() => {
     if (user) {
       navigate("/");
@@ -128,6 +135,7 @@ const Register = () => {
                   className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5"
                   required=""
                 />
+                {error && <p className="text-red-600 text-sm mt-2">{error}</p>}
               </div>
               <button
                 type="submit"
