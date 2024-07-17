@@ -1,10 +1,9 @@
 import toast from "react-hot-toast";
 import { useLocation, useNavigate } from "react-router-dom";
-import useAxiosSecure from "../hooks/axiosSecure";
 import { useState } from "react";
+import { axiosCommon } from "../hooks/axiosCommon";
 
 const Login = () => {
-  const axiosSecure = useAxiosSecure();
   const location = useLocation();
   const navigate = useNavigate();
   const [error, setError] = useState("");
@@ -19,7 +18,7 @@ const Login = () => {
     console.log(userData);
 
     try {
-      const res = await axiosSecure.post("/login", userData);
+      const res = await axiosCommon.post("/login", userData);
       console.log(res.data);
       localStorage.setItem("token", res.data.token);
       localStorage.setItem("user", identifier);
@@ -88,7 +87,9 @@ const Login = () => {
                     className="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                     required=""
                   />
-                  {error && <p className="text-red-600 text-sm mt-2">{error}</p>}
+                  {error && (
+                    <p className="text-red-600 text-sm mt-2">{error}</p>
+                  )}
                 </div>
                 <button
                   type="submit"

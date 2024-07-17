@@ -3,7 +3,7 @@ import useAxiosSecure from "../hooks/axiosSecure";
 import useContextProvider from "../hooks/useContextProvider";
 import toast from "react-hot-toast";
 
-const SendMoney = () => {
+const CashOut = () => {
   const { user: userEmail } = useContextProvider();
   const axiosSecure = useAxiosSecure();
   const [error, setError] = useState("");
@@ -23,13 +23,13 @@ const SendMoney = () => {
   const handleSend = async (e) => {
     e.preventDefault();
     const form = e.target;
-    const recipient_number = form.recipient_number.value;
+    const agent_number = form.agent_number.value;
     const send_amount = parseInt(form.send_amount.value);
     const pin = form.pin.value;
-    const sendingData = { recipient_number, send_amount, pin, userEmail };
+    const sendingData = { agent_number, send_amount, pin, userEmail };
 
     try {
-      const res = await axiosSecure.patch("/send", sendingData);
+      const res = await axiosSecure.patch("/cashout", sendingData);
       console.log(res);
       form.reset();
       setError("");
@@ -61,7 +61,7 @@ const SendMoney = () => {
                     </label>
                     <input
                       type="text"
-                      name="recipient_number"
+                      name="agent_number"
                       className="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5"
                       placeholder="Phone"
                       required=""
@@ -132,4 +132,4 @@ const SendMoney = () => {
   );
 };
 
-export default SendMoney;
+export default CashOut;

@@ -1,11 +1,10 @@
 import { Link, useLocation, useNavigate } from "react-router-dom";
-import useAxiosSecure from "../hooks/axiosSecure";
 import toast from "react-hot-toast";
 import useContextProvider from "../hooks/useContextProvider";
 import { useEffect, useState } from "react";
+import { axiosCommon } from "../hooks/axiosCommon";
 
 const Register = () => {
-  const axiosSecure = useAxiosSecure();
   const [error, setError] = useState("");
   const location = useLocation();
   const navigate = useNavigate();
@@ -30,7 +29,7 @@ const Register = () => {
     console.log(userData);
 
     try {
-      const res = await axiosSecure.post("/register", userData);
+      const res = await axiosCommon.post("/register", userData);
       console.log(res.data);
       toast.success(" Successfully Registered!");
       localStorage.setItem("user", email);
