@@ -9,6 +9,7 @@ export const axiosSecure = axios.create({
 const useAxiosSecure = () => {
   const navigate = useNavigate();
   const { Logout } = useContextProvider();
+
   axiosSecure.interceptors.request.use(
     function (config) {
       const token = localStorage.getItem("token");

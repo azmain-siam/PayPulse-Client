@@ -12,11 +12,7 @@ const CashOut = () => {
 
   const handleTotalFee = (e) => {
     const value = parseInt(e.target.value);
-    if (value > 99) {
-      setFee(5);
-    } else {
-      setFee(0);
-    }
+    setFee(value * 0.015);
     setTotal(value);
   };
 
@@ -30,14 +26,19 @@ const CashOut = () => {
 
     try {
       const res = await axiosSecure.patch("/cashout", sendingData);
-      console.log(res);
-      form.reset();
-      setError("");
-      toast.success("Sent Money Successfully!");
+      if (res.status === 200) {
+        setError(res.data);
+      }
+      if (res?.data.modifiedCount > 0) {
+        form.reset();
+        setError("");
+        setFee(0);
+        setTotal(0);
+        toast.success("Cash Out Successfully!");
+      }
     } catch (error) {
       setError(error.response.data);
     }
-    console.log(sendingData);
   };
 
   return (
@@ -47,7 +48,7 @@ const CashOut = () => {
           <div className="w-full bg-white rounded-lg shadow md:mt-0 sm:max-w-md xl:p-0">
             <div className="p-6 space-y-4 md:space-y-6 sm:p-8">
               <h1 className="text-xl font-bold leading-tight tracking-tight text-gray-900 md:text-2xl">
-                Send Money
+                Cash Out
               </h1>
 
               <form onSubmit={handleSend} className="" action="#">
@@ -57,7 +58,7 @@ const CashOut = () => {
                       htmlFor="email"
                       className="block mb-2 text-sm font-medium text-gray-900"
                     >
-                      Recipient Phone Number
+                      Agent Phone Number
                     </label>
                     <input
                       type="text"
@@ -112,7 +113,7 @@ const CashOut = () => {
                   type="submit"
                   className="w-full text-white bg-blue-600 hover:bg-blue-700 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center"
                 >
-                  Send
+                  Cash Out
                 </button>
                 <p className="text-sm font-light text-gray-500 mt-4">
                   Don’t have an account yet?{" "}

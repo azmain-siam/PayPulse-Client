@@ -31,11 +31,19 @@ const SendMoney = () => {
     try {
       const res = await axiosSecure.patch("/send", sendingData);
       console.log(res);
-      form.reset();
-      setError("");
-      toast.success("Sent Money Successfully!");
+      if (res.status === 200) {
+        setError(res.data);
+      }
+      if (res?.data.modifiedCount > 0) {
+        form.reset();
+        setError("");
+        setFee(0);
+        setTotal(0);
+        toast.success("Sent Money Successfully!");
+      }
     } catch (error) {
-      setError(error.response.data);
+      console.log(error);
+      setError(error.response);
     }
     console.log(sendingData);
   };
